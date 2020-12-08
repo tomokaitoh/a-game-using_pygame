@@ -7,8 +7,6 @@ from setting import Settings
 setting = Settings()
 
 # 检测玩家方块与砖块之间是否接触或者碰撞
-
-
 def cheak_objects(screen, character, objects, score):
     x1 = character.rect.x
     y1 = character.rect.y
@@ -17,18 +15,17 @@ def cheak_objects(screen, character, objects, score):
     # 删除已经超过游戏边界的砖块并在最上面新增一个
     if objects[-1].rect.y >= setting.screen_height:
         del objects[-1]
-        if random.randint(0, 4):
-            objects.insert(0, gameObject(screen, random.randint(
-                0, setting.screen_width-110), 0, 110, 20, gameObject.TYPE_BLOCK))
-            character.on_N_of_Block += 1
+        objects.insert(0, gameObject(screen, random.randint(
+            0, setting.screen_width-110), objects[0].rect.y-random.randint(1, 11)*0.05*setting.screen_height, 110, 20, gameObject.TYPE_BLOCK))
+        character.on_N_of_Block += 1
         score[0] = score[0] + 10
 
     # 如果两个砖块间太远，附加跳跃提升效果
     if len(objects) > 1 and len(objects) > character.on_N_of_Block:
         if objects[character.on_N_of_Block].rect.y-objects[character.on_N_of_Block-1].rect.y >= 0.3*setting.screen_height:
-            character.jump_v = 1.5*setting.character['jump_v']
+            character.jump_v = 1.3*setting.character['jump_v']
             if objects[character.on_N_of_Block].rect.y-objects[character.on_N_of_Block-1].rect.y >= 0.5*setting.screen_height:
-                character.jump_v = 1.8*setting.character['jump_v']
+                character.jump_v = 1.6*setting.character['jump_v']
         else:
             character.jump_v = setting.character['jump_v']
     # 在玩家方块所在砖块上绘制一条边界线
@@ -71,22 +68,25 @@ def cheak_objects(screen, character, objects, score):
         i += 1
 
 # 检测玩家方块是否gameover
-
-
 def cheak_gameover(character):
     if character.rect.bottom >= setting.screen_height:
         return True
     else:
         return False
 
-
 def drawObject(objects):
     for object in objects:
         object.draw()
 
+#显示得分等信息
+def printData(screen,score,character):
+    screen.blit(pygame.font.SysFont("SimHei", 22).render(
+            "Score: "+str(score[0]), 1, (0,0,0)), (0,0))
+    if character.jump_v>setting.character['jump_v']:
+        screen.blit(pygame.font.SysFont("SimHei", 22).render(
+            "Jump Up !!", 1, (233,10,20)), (100,0))
+
 # 将玩家方块和砖块一起向下移动
-
-
 def moveAll(character, objects, l):
     if character.onBlock:
         character.rect.y += l
@@ -94,21 +94,22 @@ def moveAll(character, objects, l):
         object.rect.y += l
 
 # 按键按下事件
-
-
 def cheak_keydown_event(event, character):
     if event.key == pygame.K_d:
-        character.direction['x'] += 10
+        if(character.direction['x']<10):
+            character.direction['x'] += 10
     if event.key == pygame.K_a:
-        character.direction['x'] -= 10
+        if(character.direction['x']>-10):
+            character.direction['x'] -= 10
     if event.key == pygame.K_w:
         if character.onBlock:
             character.onBlock = False
             character.direction['y'] -= character.jump_v
+    if event.key==pygame.K_q:
+        pygame.quit()
+        sys.exit(0)
 
 # 按键弹起事件
-
-
 def cheak_keyup_event(event, character):
     if event.key == pygame.K_d:
         if character.direction['x'] != 0:
@@ -118,8 +119,6 @@ def cheak_keyup_event(event, character):
             character.direction['x'] += 10
 
 # 事件监听
-
-
 def cheak_event(character):
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:

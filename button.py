@@ -4,7 +4,7 @@ import pygame
 
 
 class Button():
-    def __init__(self, screen, text, x, y, width, height, text_size=20, offset=0):
+    def __init__(self, screen, text, x, y, width, height, text_size=15, offset=0):
         self.screen = screen
         self.rect = pygame.Rect(x, y, width, height)
         self.text = text
@@ -17,7 +17,7 @@ class Button():
         pygame.draw.rect(self.screen, self.bg_color, self.rect, 0)
         pygame.draw.rect(
             self.screen, (153, 204, 255), self.rect, 1)
-        self.screen.blit(pygame.font.SysFont("宋体", self.text_size).render(
+        self.screen.blit(pygame.font.SysFont("SimHei", self.text_size).render(
             self.text, 1, self.text_color), (self.rect.centerx-0.25*len(self.text)*self.text_size+self.offset, self.rect.centery-0.5*self.text_size+3))
 
     def check_click(self, event):

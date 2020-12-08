@@ -23,9 +23,9 @@ def menu():
         (320, 350))
     pygame.display.set_caption("Game of pygame")
     screen.fill((240, 240, 240))
-    button1 = Button(screen, "Start game", 80, 120, 140, 50, offset=15)
-    button2 = Button(screen, "How to play", 80, 200, 140, 50, offset=15)
-    button3 = Button(screen, "Exit", 80, 280, 140, 50, offset=5)
+    button1 = Button(screen, "Start game", 80, 120, 140, 50,text_size=18)
+    button2 = Button(screen, "How to play", 80, 200, 140, 50,text_size=18)
+    button3 = Button(screen, "Exit", 80, 280, 140, 50,text_size=18)
     button1.draw()
     button2.draw()
     button3.draw()
@@ -80,15 +80,16 @@ def start_game():
             tkinter.messagebox.showinfo(
                 'Your Score', "Your score is "+str(score[0])+".")
             top.destroy()
-            pygame.quit()
-            sys.exit(0)
+            break
         f.drawObject(objects)
         character.draw()
+        f.printData(screen,score,character)
         character.move()
         f.moveAll(character, objects, 2)
         pygame.display.flip()
         time.sleep(settings.pause)
 
-
-menu()
-start_game()
+while(1):
+    menu()
+    time.sleep(1.2)
+    start_game()
